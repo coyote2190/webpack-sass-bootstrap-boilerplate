@@ -1,0 +1,5 @@
+files:
+  # formatter: stylish
+  include: 'src/scss/*'
+  ignore:
+    - 'src/scss/vendor/**/*.scss'
