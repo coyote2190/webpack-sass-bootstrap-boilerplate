@@ -1,12 +1,8 @@
-/**
- * Webpack main configuration file
- */
-
 const path = require('path');
 const fs = require('fs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-// const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -23,7 +19,7 @@ const htmlPluginEntries = templateFiles.map(
       hash: false,
       filename: template,
       template: path.resolve(environment.paths.source, template),
-      //   favicon: path.resolve(environment.paths.source, 'images', 'favicon.ico'),
+      favicon: path.resolve(environment.paths.source, 'images', 'favicon.ico'),
     })
 );
 
@@ -46,18 +42,18 @@ module.exports = {
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
-      //       {
-      //         test: /\.(png|gif|jpe?g|svg)$/i,
-      //         type: 'asset',
-      //         parser: {
-      //           dataUrlCondition: {
-      //             maxSize: environment.limits.images,
-      //           },
-      //         },
-      //         generator: {
-      //           filename: 'images/design/[name].[hash:6][ext]',
-      //         },
-      //       },
+      {
+        test: /\.(png|gif|jpe?g|svg)$/i,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: environment.limits.images,
+          },
+        },
+        generator: {
+          filename: 'images/[name].[hash:6][ext]',
+        },
+      },
       {
         test: /\.(eot|ttf|woff|woff2)$/,
         type: 'asset',
@@ -76,29 +72,33 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
     }),
-    //     new ImageMinimizerPlugin({
-    //       test: /\.(jpe?g|png|gif|svg)$/i,
-    //       minimizerOptions: {
-    //         // Lossless optimization with custom option
-    //         // Feel free to experiment with options for better result for you
-    //         plugins: [
-    //           ['gifsicle', { interlaced: true }],
-    //           ['jpegtran', { progressive: true }],
-    //           ['optipng', { optimizationLevel: 5 }],
-    //           [
-    //             'svgo',
-    //             {
-    //               plugins: [
-    //                 {
-    //                   name: 'removeViewBox',
-    //                   active: false,
-    //                 },
-    //               ],
-    //             },
-    //           ],
-    //         ],
-    //       },
-    //     }),
+    new ImageMinimizerPlugin({
+      test: /\.(jpe?g|png|gif|svg)$/i,
+      minimizer: {
+        implementation: ImageMinimizerPlugin.imageminMinify,
+        options: {
+          // Lossless optimization with custom option
+          // Feel free to experiment with options for better result for you
+          plugins: [
+            ['gifsicle', { interlaced: true }],
+            ['jpegtran', { progressive: true }],
+            ['jpegoptim', { max: 70 }],
+            ['optipng', { optimizationLevel: 5 }],
+            [
+              'svgo',
+              {
+                plugins: [
+                  {
+                    name: 'removeViewBox',
+                    active: false,
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      },
+    }),
     new CleanWebpackPlugin({
       verbose: true,
       cleanOnceBeforeBuildPatterns: ['**/*', '!stats.json'],
