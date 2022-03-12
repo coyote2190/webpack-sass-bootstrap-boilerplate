@@ -1,7 +1,7 @@
 {
   "name": "webpack-sass-bootstrap-boilerplate",
   "version": "1.0.0",
-  "description": "Webpack template, Babel ES6, Sass, Bootstrap v5",
+  "description": "Webpack template, Babel ES6, Sass, Bootstrap v5, Jquery, Lodash",
   "browserslist": [
     "last 2 versions",
     "> 5%"
@@ -20,7 +20,6 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.1.3",
-    "jpegtran-bin": "^6.0.1",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21"
   },
